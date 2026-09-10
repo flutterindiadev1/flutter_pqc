@@ -1,0 +1,19 @@
+# Ignore the massive tests and documentation directories inside liboqs to keep the pub package small.
+/src/liboqs/tests/
+/src/liboqs/test/
+/src/liboqs/docs/
+/src/liboqs/scripts/
+/src/liboqs/.git/
+/src/liboqs/.github/
+/src/liboqs/build*/
+/src/liboqs/visual_studio/
+/src/liboqs/zephyr/
+/src/liboqs/README.md
+
+# Example app build artifacts (just in case they slip past .gitignore)
+/example/build/
+/example/.dart_tool/
+/example/macos/Flutter/ephemeral/
+/example/ios/Flutter/ephemeral/
+/example/linux/flutter/ephemeral/
+/example/windows/flutter/ephemeral/

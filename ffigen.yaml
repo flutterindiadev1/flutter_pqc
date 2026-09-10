@@ -1,0 +1,24 @@
+# Run with `dart run ffigen --config ffigen.yaml`.
+name: FlutterPqcBindings
+description: |
+  Bindings for `src/flutter_pqc.h`.
+
+  Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
+output: 'lib/flutter_pqc_bindings_generated.dart'
+headers:
+  entry-points:
+    - 'src/liboqs/src/oqs.h'
+  include-directives:
+    - '**oqs.h'
+    - '**kem.h'
+    - '**kem_kyber.h'
+    - '**kem_ml_kem.h'
+    - '**sig.h'
+    - '**sig_ml_dsa.h'
+compiler-opts:
+  - '-Isrc/liboqs/build/include'
+  - '-Isrc/liboqs/src'
+ffi-native:
+comments:
+  style: any
+  length: full
