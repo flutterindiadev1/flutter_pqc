@@ -109,7 +109,26 @@ void main(List<String> args) async {
     } else if (osStr == 'android' || osStr == 'linux') {
       flags.addAll(['-Wl,--whole-archive', liboqsPath, '-Wl,--no-whole-archive']);
     } else if (osStr == 'windows') {
-      flags.add('/WHOLEARCHIVE:$liboqsPath');
+      final defFile = File('${buildDir.path}/exports.def');
+      final bindingsFile = File('lib/flutter_pqc_bindings_generated.dart');
+      if (bindingsFile.existsSync()) {
+        final content = bindingsFile.readAsStringSync();
+        final regex = RegExp(r'external\s+.*?(OQS_[a-zA-Z0-9_]+)\s*\(');
+        final matches = regex.allMatches(content);
+        final symbols = matches.map((m) => m.group(1)!).toSet();
+        
+        final defContent = StringBuffer();
+        defContent.writeln('EXPORTS');
+        for (final sym in symbols) {
+          defContent.writeln('  $sym');
+        }
+        defFile.writeAsStringSync(defContent.toString());
+      } else {
+        logger.warning('Could not find bindings file to generate .def');
+      }
+      
+      flags.add(defFile.path);
+      flags.add(liboqsPath);
     } else {
       flags.add(liboqsPath);
     }
@@ -118,7 +137,7 @@ void main(List<String> args) async {
       name: packageName,
       assetName: '${packageName}_bindings_generated.dart',
       sources: ['src/$packageName.c'],
-      includes: ['src/liboqs/src', 'src/liboqs/build/include'],
+      includes: ['src/liboqs/src', '${buildDir.path}/include'],
       flags: flags,
     );
     
