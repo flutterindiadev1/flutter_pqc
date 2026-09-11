@@ -101,7 +101,21 @@ void main(List<String> args) async {
     
     // 2. Build our C wrapper linking against liboqs
     final packageName = input.packageName;
-    final liboqsPath = '${buildDir.path}/lib/liboqs.a';
+    
+    String liboqsPath = '${buildDir.path}/lib/liboqs.a';
+    if (osStr == 'windows') {
+      final possiblePaths = [
+        '${buildDir.path}/lib/oqs.lib',
+        '${buildDir.path}/lib/Release/oqs.lib',
+        '${buildDir.path}/lib/Debug/oqs.lib',
+      ];
+      for (final p in possiblePaths) {
+        if (File(p).existsSync()) {
+          liboqsPath = p;
+          break;
+        }
+      }
+    }
     
     final flags = <String>[];
     if (osStr == 'macos' || osStr == 'ios') {
