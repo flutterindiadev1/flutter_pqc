@@ -145,6 +145,7 @@ void main(List<String> args) async {
       
       flags.add(defFile.absolute.path);
       flags.add(absLiboqsPath);
+      flags.add('advapi32.lib');
     } else {
       flags.add(absLiboqsPath);
     }
