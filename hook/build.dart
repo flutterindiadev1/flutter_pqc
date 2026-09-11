@@ -118,10 +118,12 @@ void main(List<String> args) async {
     }
     
     final flags = <String>[];
+    final absLiboqsPath = File(liboqsPath).absolute.path;
+    
     if (osStr == 'macos' || osStr == 'ios') {
-      flags.addAll(['-Wl,-force_load', liboqsPath]);
+      flags.addAll(['-Wl,-force_load', absLiboqsPath]);
     } else if (osStr == 'android' || osStr == 'linux') {
-      flags.addAll(['-Wl,--whole-archive', liboqsPath, '-Wl,--no-whole-archive']);
+      flags.addAll(['-Wl,--whole-archive', absLiboqsPath, '-Wl,--no-whole-archive']);
     } else if (osStr == 'windows') {
       final defFile = File('${buildDir.path}/exports.def');
       final bindingsFile = File('lib/flutter_pqc_bindings_generated.dart');
@@ -141,10 +143,10 @@ void main(List<String> args) async {
         logger.warning('Could not find bindings file to generate .def');
       }
       
-      flags.add(defFile.path);
-      flags.add(liboqsPath);
+      flags.add(defFile.absolute.path);
+      flags.add(absLiboqsPath);
     } else {
-      flags.add(liboqsPath);
+      flags.add(absLiboqsPath);
     }
     
     final cbuilder = CBuilder.library(
